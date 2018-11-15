@@ -57,6 +57,7 @@ class TourPortal extends Component {
         stepInteraction: PropTypes.bool,
         nextStepCallback: PropTypes.func,
         prevStepCallback: PropTypes.func,
+        delay: PropTypes.number,
       })
     ),
     update: PropTypes.string,
@@ -232,7 +233,11 @@ class TourPortal extends Component {
 
     if (node) {
       const cb = () => stepCallback(node)
-      this.calculateNode(node, step.position, cb)
+      const delay = step.delay || 0
+
+      setTimeout(() => {
+        this.calculateNode(node, step.position, cb)
+      }, delay)
     } else {
       this.setState(
         setNodeState(null, this.helper.current, step.position),
