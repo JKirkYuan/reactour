@@ -55,6 +55,8 @@ class TourPortal extends Component {
         action: PropTypes.func,
         style: PropTypes.object,
         stepInteraction: PropTypes.bool,
+        nextStepCallback: PropTypes.func,
+        prevStepCallback: PropTypes.func,
       })
     ),
     update: PropTypes.string,
@@ -305,6 +307,12 @@ class TourPortal extends Component {
 
   nextStep = () => {
     const { steps, getCurrentStep } = this.props
+    const currStep = steps[this.state.current]
+
+    if (typeof currStep.nextStepCallback === 'function') {
+      currStep.nextStepCallback()
+    }
+
     this.setState(prevState => {
       const nextStep =
         prevState.current < steps.length - 1
@@ -322,7 +330,13 @@ class TourPortal extends Component {
   }
 
   prevStep = () => {
-    const { getCurrentStep } = this.props
+    const { steps, getCurrentStep } = this.props
+    const currStep = steps[this.state.current]
+
+    if (typeof currStep.prevStepCallback === 'function') {
+      currStep.prevStepCallback()
+    }
+
     this.setState(prevState => {
       const nextStep =
         prevState.current > 0 ? prevState.current - 1 : prevState.current
